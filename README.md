@@ -1,4 +1,4 @@
-# inventory_cef
+# INVENTORY FOR DM SERVER // Made by my Richok
 
 ## Project setup
 ```
