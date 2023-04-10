@@ -1,37 +1,15 @@
 <template>
   <div class="main_container">
-    <div class="inventory">
+    <div STYLE="position: relative" class="inventory">
       <div class="inventory_text">
         <h2 style="margin: 25px 55px ; font-size: 18px">Инвентарь</h2>
         <div class="line"></div>
-        <h2 style="margin: 25px 55px ; font-size: 18px">{{item_amount}}/50</h2>
+        <h2 style="margin: 25px 55px ; font-size: 18px">{{itemAmount}}/50</h2>
       </div>
-      <div class="item_list">
+      <div @dragend="dragEnd" id="droppable" @dragover.prevent @drop="drop" class="item_list">
         <div ref="item_amount" class="item_case">
-          <div  :key="index" @click="showMenu(index)" :class="{ active: selectedItemIndex === index }" class="item_showcase">
-            <div class="item_background">
-              <img style='height: 100%; width: 100%; object-fit: contain' src="./assets/revolver.png">
-            </div>
-            <p style="text-align: center; padding: 10px">{{ index }}: {{ item }}</p>
-              <div ref="container">
-                <ContextMenu v-if="menuVisible" :items="menuItems"/>
-              </div>
-          </div>
-          <div class="item_showcase">
-            <div class="item_background">
-              <img style='height: 70%; width: 70%; object-fit: contain' src="./assets/medkit.png">
-            </div>
-            <p style="text-align: center; padding: 10px">Med-kit</p>
-          </div>
-          <div v-for="(item, index) in menuItems" :key="index" @click="showMenu(index)" :class="{ active: selectedItemIndex === index }" class="item_showcase">
-            <div class="item_background">
-              <img style='height: 100%; width: 70%; object-fit: contain' src="./assets/revolver_mk2.png">
-            </div>
-            <p style="text-align: center; padding: 10px">Revolver MK2</p>
-            <div ref="container">
-              <ContextMenu v-if="menuVisible" :items="menuItems"/>
-            </div>
-          </div>
+          <inventory-item v-for="(item) in items" :key="item.id" :item="item"/>
+
         </div>
       </div>
     </div>
@@ -45,23 +23,23 @@
         <div class="hotkey">
           <div class="item_background"></div>
         </div>
+          <div class="hotkey">
+            <div id="droppable" @dragover.prevent @drop="drop" class="item_background"></div>
+          </div>
         <div class="hotkey">
-          <div class="item_background"></div>
+          <div id="droppable" @dragover.prevent @drop="drop" class="item_background"></div>
         </div>
         <div class="hotkey">
-          <div class="item_background"></div>
+          <div id="droppable" @dragover.prevent @drop="drop" class="item_background"></div>
         </div>
         <div class="hotkey">
-          <div class="item_background"></div>
+          <div id="droppable" @dragover.prevent @drop="drop" class="item_background"></div>
         </div>
         <div class="hotkey">
-          <div class="item_background"></div>
+          <div id="droppable" @dragover.prevent @drop="drop" class="item_background"></div>
         </div>
         <div class="hotkey">
-          <div class="item_background"></div>
-        </div>
-        <div class="hotkey">
-          <div class="item_background"></div>
+          <div id="droppable" @dragover.prevent @drop="drop" class="item_background"></div>
         </div>
 
       </div>
@@ -71,98 +49,47 @@
 </template>
 
 <script>
-import ContextMenu from './components/contextMenu';
+import InventoryItem from './components/inventoryItem';
 
 export default {
-  name: 'App',
   components: {
-    ContextMenu
+    InventoryItem,
+  },
+
+  methods: {
+    drop(event) {
+      event.preventDefault();
+      const data = event.dataTransfer.getData("text");
+      event.target.appendChild(document.getElementById(data));
+
+    },
+    dragEnd(event) {
+      event.target.classList.remove("dragging");
+    },
   },
 
   data() {
     return {
-      item_amount: 0,
-      menuVisible: false,
-      selectedItem: '',
-      selectedItemIndex: null,
-      menuItems: [
-        { text: 'Использовать' },
-        { text: 'Выбросить' },
-      ],
       items: [
-        {
-          id: 0,
-          name: "Revolver",
-          avatar: "./assets/revolver.png",
-          isDefaulte: true,
-        },
-        {
-          id: 1,
-          name: "Revolver MK2",
-          avatar: "./assets/revolver_mk2.png",
-          isDefaulte: false,
-        },
-        {
-          id: 3,
-          name: "Steve Jobs",
-          avatar: "https://pickaface.net/gallery/avatar/Opi51c74d0125fd4.png"
-        },
-        {
-          id: 4,
-          name: "Yassine Smith",
-          avatar: "https://pickaface.net/gallery/avatar/unr_yassine_191124_2012_3gngr.png"
-        },
-        {
-          id: 5,
-          name: "Senior Saez",
-          avatar: "https://pickaface.net/gallery/avatar/elmedinilla541c03412955c.png"
-        }
-      ]}
-    },
-
-  methods: {
-    showMenu(index) {
-      if (this.selectedItemIndex === index) {
-        // Close the selected menu if it's already open
-        this.menuVisible = false;
-        this.selectedItemIndex = null;
-      } else {
-        // Close any previously opened menu
-        this.menuVisible = false;
-
-        // Open the selected menu
-        this.selectedItemIndex = index;
-        this.menuVisible = true;
-        this.selectedItem = this.menuItems[index];
-
-      }
-    },
-    hideMenu(event) {
-      if (!event.target.closest('.item_showcase') && !event.target.closest('.item_showcase')) {
-        this.menuVisible = false;
-        this.selectedItemIndex = null;
-      }
+        { value: 'revolver', label: 'Revolver', icon: "https://i.imgur.com/e9NcvzE.png", isDefault: true, list: 0, },
+        { value: 'revolver_mk2', label: 'Revolver MK2', icon: "https://i.imgur.com/CIStAuI.png", isDefault: false, list: 0,  },
+        { value: 'medkit', label: 'Med-kit', icon: "https://i.imgur.com/giCxxwR.png", isDefault: false, list: 2,  },
+        { value: 'heavy_shotgun', label: 'Heavy shotgun', icon: "https://i.imgur.com/klCCo8o.png", isDefault: false, list: 0,  },
+        { value: 'armor', label: 'Armor', icon: "https://i.imgur.com/ykMXYKG.png", isDefault: false, list: 1,  },
+      ],
     }
   },
 
-  mounted() {
-    let item_amount = this.$refs.item_amount.getElementsByClassName('item_showcase');
-    this.item_amount = item_amount.length;
-      this.items.forEach((item, index) => {
-        console.log(index);
-      });
-  },
-
-  beforeUnmount() {
-    document.removeEventListener('click', this.hideMenu);
-  },
-
   computed: {
-
-
-  },
-
+    listOne() {
+      return this.items.filter((item) => item.list === 1)
+    },
+    listTwo() {
+      return this.items.filter((item) => item.list === 2)
+    },
+  }
 }
+
 </script>
 
 <style>
@@ -225,6 +152,7 @@ img {
   max-width: 120vh;
   max-height: 80vh;
 }
+
 
 .inventory {
   top: 0px;
