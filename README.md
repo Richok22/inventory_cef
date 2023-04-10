@@ -1,4 +1,4 @@
-# INVENTORY FOR DM SERVER // Made by my Richok
+# INVENTORY FOR DM SERVER // Made by me Richok
 
 ## Project setup
 ```
