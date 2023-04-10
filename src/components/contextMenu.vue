@@ -1,57 +1,48 @@
 <template>
-  <div class="context-menu" :style="{top: y + 'px', left: x + 'px'}">
-    <ul>
-      <li style="padding: 5px" v-for="(item, index) in items" :key="index" @click="selectItem(item)">
-        {{ item.text }}
-      </li>
+  <div class="context-container">
+    <ul class="context-menu">
+      <li v-for="item in items" :key="item.id" @click="item.action">{{ item.label }}</li>
     </ul>
   </div>
 </template>
-
-<style>
-li{
-  font-family: 'Montserrat', sans-serif;
-  color: #9E9E9E;
-  font-weight:500;
-  font-size: 14px;
-  word-wrap: break-word;
-}
-
-li:hover {
-  color: #fff;
-}
-
-.context-menu {
-  position: absolute;
-  color: #fff;
-  background-color: #34384e;
-  width: 150px;
-  height: 60px;
-  border-radius: 15px;
-}
-
-ul {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  list-style-type: none;
-}
-
-</style>
 
 <script>
 export default {
   props: {
     items: {
       type: Array,
-      required: true
+      required: true,
     },
   },
-  methods: {
-    selectItem(item) {
-      this.$emit('itemSelected', item);
-    }
-  }
-}
+
+};
 </script>
+
+<style scoped>
+.context-menu {
+  margin-top: 4px;
+  position: absolute;
+  z-index: 1000;
+  background-color: #35374f;
+  color: #9b9da9;
+  border-radius: 10px;
+  list-style-type: none;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Montserrat', sans-serif;
+}
+
+li {
+  font-size: 13px;
+  margin: 7px;
+}
+li:hover {
+  color:#ffffff;
+}
+
+
+
+
+</style>
